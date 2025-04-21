@@ -1,31 +1,30 @@
-const express = require('express');
 const admin = require('firebase-admin');
-const dotenv = require('dotenv');
-dotenv.config();
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Firebase Admin Init usando variáveis de ambiente
-admin.initializeApp({
-  credential: admin.credential.cert({
-    type: 'service_account',
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    privateKeyId: process.env.FIREBASE_PRIVATE_KEY_ID,
-    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    clientId: process.env.FIREBASE_CLIENT_ID,
-    authUri: 'https://accounts.google.com/o/oauth2/auth',
-    tokenUri: 'https://oauth2.googleapis.com/token',
-    authProviderX509CertUrl: 'https://www.googleapis.com/oauth2/v1/certs',
-    clientC509CertUrl: process.env.FIREBASE_CLIENT_CERT_URL,
-  }),
-});
+// Evita reinicialização múltipla em ambiente serverless
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      type: 'service_account',
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      privateKeyId: process.env.FIREBASE_PRIVATE_KEY_ID,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      clientId: process.env.FIREBASE_CLIENT_ID,
+      authUri: 'https://accounts.google.com/o/oauth2/auth',
+      tokenUri: 'https://oauth2.googleapis.com/token',
+      authProviderX509CertUrl: 'https://www.googleapis.com/oauth2/v1/certs',
+      clientC509CertUrl: process.env.FIREBASE_CLIENT_CERT_URL,
+    }),
+  });
+}
 
 const db = admin.firestore();
-app.use(express.json());
 
-app.post('/webhook', async (req, res) => {
+module.exports = async (req, res) => {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Método não permitido' });
+  }
+
   const { currentStatus, client, product } = req.body;
 
   if (currentStatus !== 'paid') {
@@ -102,8 +101,4 @@ app.post('/webhook', async (req, res) => {
     console.error('Erro ao processar webhook:', error);
     res.status(500).json({ error: 'Erro interno' });
   }
-});
-
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor ouvindo na porta ${PORT}`);
-});
+};
