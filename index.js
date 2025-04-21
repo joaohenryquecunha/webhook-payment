@@ -6,6 +6,11 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+if (!process.env.FIREBASE_PRIVATE_KEY) {
+  console.error("A variável de ambiente FIREBASE_PRIVATE_KEY não está definida.");
+  process.exit(1);  // Sai do programa se a variável não estiver definida
+}
+
 // Firebase Admin Init usando variáveis de ambiente
 admin.initializeApp({
   credential: admin.credential.cert({
@@ -21,7 +26,6 @@ admin.initializeApp({
     clientC509CertUrl: process.env.FIREBASE_CLIENT_CERT_URL,
   }),
 });
-console.log('FIREBASE_PRIVATE_KEY:', process.env.FIREBASE_PRIVATE_KEY);
 
 const db = admin.firestore();
 app.use(express.json());
