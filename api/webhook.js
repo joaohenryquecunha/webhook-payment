@@ -1,5 +1,8 @@
 const admin = require('firebase-admin');
 
+console.log(process.env.FIREBASE_PRIVATE_KEY.slice(0, 30));
+
+
 // Evita reinicialização múltipla em ambiente serverless
 if (!admin.apps.length) {
   admin.initializeApp({
