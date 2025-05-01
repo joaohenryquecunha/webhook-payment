@@ -44,11 +44,11 @@ module.exports = async (req, res) => {
   document = document.replace(/[^\d]/g, '');
 
   let daysToAdd = 0;
-  if (productName === 'finance 30') {
+  if (productName === 'Finance 30') {
     daysToAdd = 30;
-  } else if (productName === 'finance 180') {
+  } else if (productName === 'Finance 180') {
     daysToAdd = 180;
-  } else if (productName === 'finance 365') {
+  } else if (productName === 'Finance 365') {
     daysToAdd = 365;
   } else {
     return res.status(400).json({ error: 'Produto inválido' });
