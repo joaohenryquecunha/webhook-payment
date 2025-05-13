@@ -72,8 +72,8 @@ app.post('/webhook', async (req, res) => {
   }
 
   let document = client?.document || client?.cpf_cnpj;
-  const productName = product?.name?.toLowerCase();
-
+  const productName = product?.name;
+  
   if (!document || !productName) {
     return res.status(400).json({ error: 'Documento ou nome do produto ausente' });
   }
