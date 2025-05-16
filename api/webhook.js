@@ -6,44 +6,16 @@ require('dotenv').config();
 app.use(express.json()); // Para processar o corpo das requisições em JSON
 
 // Configuração do Firebase
-let key = `-----BEGIN PRIVATE KEY-----
-MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDfQX/Pe6mZn+KI
-lZ/q8T53uQLi4Rkm/Y5iMP6YROtb3Jrk7opumnaBrOjgoQALfK4bzkvpGY/Hc60K
-7TgDPG0dUX+xLEEIeAUdQCYF+VnIpVJfKFuwMDbtC/Bw+1ZyqQilD20Be1APQdvQ
-2FMaVbVgMU/ajdk6qNHdaAB/Xam8WYWC6Y+sAr/YEbyFWMAXZCeuUYvDXBAt2Toq
-EXmkL2UKjPWf+M6EF/xykHz2KHHLAYfR6Gx8Fp9lj5G/Z7QsvE/+VWrXZp9Cc+p8
-n3CrOM9t6Cwgk+N5fXVwbPqtxjuzb0CP8QbQVkXUpiwL2Q8/wrVrSuyc5ZbQFVPD
-baAdSRXFAgMBAAECggEAFkRZo4+RcF2WggnuW8f484bz5z4NPKrQbzG0yuog0VY0
-6r1x+CsWw8NDrNfSAdNLKEHQp2yhvwJmEW9shUIbHe/5fOnNiLMzy2GRCUp/7ney
-ugPz9SQx7j2hGxuuWRxL3O6ncBzk9MicTH2u+DLxNqlkbgd00Zlx6RPM7OciHUNe
-0CjtV87L3hpSTlxFJuqW7PWiEY+hbrXjX26t7wRsDxnIaUO1+fAd3V/MsMOiQ1WI
-zVn2cHUUdFkct9B78oEuelEhpEnKA5jft4wf2Yo9DetvG8p1kloyi39aV8M61/9w
-M8aX9Nc/psfpEQqVbZCVnwXzMwyakaUyEjxmjDgPQQKBgQDy+GJu+zy4awxN0wkC
-j/5Lh1QqmJcQ9YFVVE1QXbKSpF9juuwW1gN87p/2+B557MrHVbNJy1W9h8GkRgW8
-ocflByNEbKKlJXX77wIsmfY86gxJvoJmk3mjVJUTOmwI5Pw5/Jcw2z0dlPzyN6JT
-n2U/0mzZ10xGEIDlfaIedXQEoQKBgQDrOnc/DbS2GrWPQT1zL9/7Tk8OcZJMa3/b
-snUNxiaKAJdLZXxJzDGu+7zm3Ru6dYPXncztLM6N4Wyt2p7loBlAvwKHBRjBuHXm
-jA3PRZmmvMkGgPJvh/hPcp3jS2vMf9Wxe17b/cjouO6cs72J+rewAc51HUvc1Kjd
-wfK4AvHapQKBgBsutrR73xsyvrmmNofW3DhO95ecYqo/DS0itVOcZ/IH+bQKoYcc
-gl9jwvm6YI57c2RBrkE/QmRl38AlJVcpMlfpKITrMncPbde1saSTxPyjoqRNcAFR
-1nXzbIouKxADrkQ+ghuxK3E3zeS7XKnGV2mAfTUR5TKhfgouuAh4U3aBAoGAPmGO
-5iXYWsLSi18d0MJNf/PQe2AbEDEiAz1cVX7LEaX+eXw8bcW9F06jVgYlKFmp0TCD
-/BH55R53F9P2d6bxi34cSXpMinNEsRNLRkCK8vD1zse7g2BntYoL3Q9PUzhDj4HM
-MkMnWLBSdzQje8gFlqOkAOL4D2RGNCkPGUWOphECgYBoIw7e8oCScRELo1rfUYVP
-hhe+P+KCgbb5Ez3VF0ISLNJXG5h6wDy4vnfy5086/9FXkimsYnRlZqXOkKXgkLwq
-l1FNnI/aC6lTzpWJgIG0zoiJ1lC7C66YnjhZln3FJTl9nN/brcmLghtoWbDrr4FX
-BcHXoflbMCP0viHWI4q0Kg==
------END PRIVATE KEY-----`;
-
-key = key.replace(/\\n/g, '\n');
-
+// ATENÇÃO: No .env, salve a chave como uma linha única, substituindo quebras de linha por \n
+// Exemplo:
+// FIREBASE_PRIVATE_KEY=-----BEGIN PRIVATE KEY-----\nMIIEv...\n-----END PRIVATE KEY-----\n
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert({
       type: 'service_account',
       projectId: process.env.FIREBASE_PROJECT_ID,
       privateKeyId: process.env.FIREBASE_PRIVATE_KEY_ID,
-      privateKey: key,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
       clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
       clientId: process.env.FIREBASE_CLIENT_ID,
       authUri: 'https://accounts.google.com/o/oauth2/auth',
